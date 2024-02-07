@@ -1,0 +1,11 @@
+mk dir nesteam
+cd nesteam
+
+python -m venv venv
+call venv\Scripts\activate or venv\Scripts\activate
+pip install django
+pip install djangorestframework
+pip freeze > requirements.txt
+django-admin startproject nesteam .
+python manage.py startapp usersapp
+python manage.py startapp games
