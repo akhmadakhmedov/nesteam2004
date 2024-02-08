@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from .models import *
 from .serializers import *
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, ListCreateAPIView
+from rest_framework.viewsets import ModelViewSet
 
 
 #def games_list(request):
@@ -11,13 +12,17 @@ from rest_framework.generics import ListAPIView, CreateAPIView
 #    return JsonResponse(data, safe=False)
 
 
-class AddGameCreateAPIView(CreateAPIView):
-    serializer_class = GameSerializer
-    queryset = Game.objects.all()
+#class CreateGameAPIView(CreateAPIView):
+#    serializer_class = GameSerializer
+#    queryset = Game.objects.all()
 
-class GamesListAPIView(ListAPIView):
-    queryset = Game.objects.all()
+#class GamesListAPIView(ListAPIView):
+#    queryset = Game.objects.all()
+#    serializer_class = GameSerializer
+
+class GamesView(ListCreateAPIView):
     serializer_class = GameSerializer
+    queryset = Game.objects.all()
 
 #def studio(request):
 #    studio_list = Studio.objects.all()
@@ -32,3 +37,7 @@ class StudiosListAPIView(ListAPIView):
 class StudiosCreateAPIView(CreateAPIView):
     serializer_class = StudioSerializer
     queryset = Studio.objects.all()
+
+class GenreViewSet(ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer

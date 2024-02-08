@@ -1,9 +1,21 @@
 from django.db import models
 
+class Genre(models.Model):
+    name = models.CharField(max_length=55)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
 
 class Game(models.Model):
     name = models.CharField(max_length=55)
     year = models.PositiveIntegerField()
+    genre = models.ForeignKey(
+        to=Genre,
+        null=True,
+        on_delete=models.PROTECT
+    )
 
     def __str__(self):
         return self.name
@@ -17,3 +29,5 @@ class Studio(models.Model):
 
     def __str__(self):
         return self.name
+
+
