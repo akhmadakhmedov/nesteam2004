@@ -18,18 +18,24 @@ from django.contrib import admin
 from django.urls import path, include
 from games.views import *
 from rest_framework import routers
+from .yasg import urlpatterns as doc_urls
+
 
 router = routers.DefaultRouter()
 router.register(r'genre', GenreViewSet)
+router.register(r'studio', StudioViewSet)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     #path('games/', GamesListAPIView.as_view(), name='games'),
     #path('create-game/', CreateGameAPIView.as_view(), name='create-game'),
+    path('game-create/', GameCreateAPIView.as_view(), name='game-create'),
     path('games-view/', GamesView.as_view(), name='games-view'),
     path('studios/', StudiosListAPIView.as_view(), name='studios'),
-    path('create-studio', StudiosCreateAPIView.as_view(), name='create-studio'),
+    path('create-studio/', StudiosCreateAPIView.as_view(), name='create-studio'),
     path('users/', include("usersapp.urls")),
-    path('', include(router.urls)),
+    path('genre-api/', include(router.urls)),
+    path('studio-api/', include(router.urls)),
 ]
+urlpatterns += doc_urls

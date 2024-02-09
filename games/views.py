@@ -1,4 +1,6 @@
 from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import *
 from .serializers import *
 from rest_framework.generics import ListAPIView, CreateAPIView, ListCreateAPIView
@@ -41,3 +43,30 @@ class StudiosCreateAPIView(CreateAPIView):
 class GenreViewSet(ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+
+
+class StudioViewSet(ModelViewSet):
+    queryset = Studio.objects.all()
+    serializer_class = StudioSerializer
+
+
+class GameCreateAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializers = GameSerializer(data=data)
+        if serializers.is_valid():
+            game = Game()
+            game.name = serializers.validated_data["name"]
+            game.year = serializers.validated_data["year"]
+            game.genre = serializers.validated_data["genre"]
+            game.studio = serializers.validated_data["studio"]
+            game.save()
+            serializers = GameSerializer(instance=game)
+            return Response(data=serializers.data, status=201)
+        else:
+            errors = serializers.error_messages
+            response_data = {
+                "message": "Not valid data",
+                "errors": errors
+            }
+            return Response(response_data, status=400)

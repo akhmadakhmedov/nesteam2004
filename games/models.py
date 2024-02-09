@@ -16,6 +16,12 @@ class Game(models.Model):
         null=True,
         on_delete=models.PROTECT
     )
+    studio = models.ForeignKey(
+        to='Studio',
+        null=True,
+        on_delete=models.PROTECT,
+        blank=False
+    )
 
     def __str__(self):
         return self.name
