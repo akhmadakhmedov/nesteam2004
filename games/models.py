@@ -10,21 +10,26 @@ class Genre(models.Model):
 
 class Game(models.Model):
     name = models.CharField(max_length=55)
-    year = models.PositiveIntegerField()
+    year = models.IntegerField(null=True, blank=True)
     genre = models.ForeignKey(
         to=Genre,
         null=True,
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        blank=True
     )
     studio = models.ForeignKey(
         to='Studio',
         null=True,
         on_delete=models.PROTECT,
-        blank=False
+        blank=True
     )
+
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['id']
 
 
 class Studio(models.Model):

@@ -1,6 +1,7 @@
 from django.test import TestCase
 from rest_framework.test import APITestCase
 from .models import *
+from .factories import GenreFactory, GameFactory
 
 class GameCreateAPITestCase(APITestCase):
     def test_create_game_should_success(self):
@@ -44,5 +45,38 @@ class GameCreateAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 405)
         games_exists = Game.objects.filter(name="Wrong form").exists()
         self.assertFalse(games_exists)
+
+class GenreListTest(APITestCase):
+    def setUp(self):
+        self.genre_1 = GenreFactory()
+        self.genre_2 = GenreFactory()
+        self.genre_3 = GenreFactory()
+
+    def test_get_list_of_3_genres(self):
+        response = self.client.get('/genre/genre-api/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.genre_1.name, response.data[0]['name'])
+
+    def test_get_genre_detail(self):
+        response = self.client.get(f'/genre/genre-api/{self.genre_1.pk}/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.genre_1.name, response.data['name'])
+
+class GameListTest(APITestCase):
+    def test_get_list_of_3_games(self):
+        game_1 = GameFactory()
+        game_2 = GameFactory()
+        game_3 = GameFactory()
+        response = self.client.get('/game/game-api/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(game_1.name, response.data[0]['name'])
+
+    def test_get_game_detail(self):
+        game_1 = GameFactory()
+        response = self.client.get(f'/game/game-api/{game_1.pk}/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(game_1.name, response.data['name'])
+
+
 
 

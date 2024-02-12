@@ -70,3 +70,7 @@ class GameCreateAPIView(APIView):
                 "errors": errors
             }
             return Response(response_data, status=400)
+
+class GameViewSet(ModelViewSet):
+    serializer_class = GameSerializer
+    queryset = Game.objects.all()

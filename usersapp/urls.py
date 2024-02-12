@@ -3,7 +3,7 @@ from .views import *
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'api-users', UserViewSet)
+router.register(r'api-collection', UserViewSet)
 
 urlpatterns = [
     path('list/', users_list, name='users-list'),
