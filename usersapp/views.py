@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from rest_framework.response import Response
 from .serializers import *
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
+from .filters import PlayerFilter
 
 def users_list(request):
     user_list = User.objects.all()
@@ -19,4 +23,10 @@ def user_detail(request, pk):
 class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.filter(is_active=True)
+
+class PlayerListAPIView(ListAPIView):
+    queryset = Player.objects.all()
+    serializer_class = PlayerSerializer
+    filterset_class = PlayerFilter
+
 
