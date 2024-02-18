@@ -1,11 +1,16 @@
 from django.http import JsonResponse
+from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 from .models import *
 from .serializers import *
 from rest_framework.generics import ListAPIView, CreateAPIView, ListCreateAPIView
 from rest_framework.viewsets import ModelViewSet
+from .paginations import *
 from .filters import GameFilter
+from rest_framework import filters
 
 
 #def games_list(request):
@@ -24,9 +29,29 @@ from .filters import GameFilter
 #    serializer_class = GameSerializer
 
 class GamesView(ListCreateAPIView):
+    pagination_class = GamePagination
     serializer_class = GameSerializer
     queryset = Game.objects.all()
-    filterset_class = GameFilter
+
+
+
+
+class GamesSearchView(APIView):
+    def get(self, request):
+        if 'key_word' in request.GET:
+            key_word = request.GET['key_word']
+        elif 'key_word' in request.data:
+            key_word = request.data['key_word']
+        else:
+            return Response('no data', status=400)
+        games = Game.objects.filter(
+            Q(name__icontains = key_word) |
+            Q(genre__name__icontains = key_word) |
+            Q(studio__name__icontains = key_word)
+        )
+        serializer = GameSerializer(instance=games, many=True)
+        json_data = serializer.data
+        return Response(data=json_data)
 
 #def studio(request):
 #    studio_list = Studio.objects.all()
@@ -37,12 +62,16 @@ class GamesView(ListCreateAPIView):
 class StudiosListAPIView(ListAPIView):
     queryset = Studio.objects.all()
     serializer_class = StudioSerializer
+    #permission_classes = [IsAuthenticated]
+
+
 
 class StudiosCreateAPIView(CreateAPIView):
     serializer_class = StudioSerializer
     queryset = Studio.objects.all()
 
 class GenreViewSet(ModelViewSet):
+    pagination_class = GenrePagination
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 

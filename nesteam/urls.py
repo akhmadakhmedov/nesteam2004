@@ -37,6 +37,7 @@ urlpatterns = [
     #path('create-game/', CreateGameAPIView.as_view(), name='create-game'),
     path('game-create/', GameCreateAPIView.as_view(), name='game-create'),
     path('games-view/', GamesView.as_view(), name='games-view'),
+    path('games-search/', GamesSearchView.as_view(), name='games-search'),
     path('studios/', StudiosListAPIView.as_view(), name='studios'),
     path('create-studio/', StudiosCreateAPIView.as_view(), name='create-studio'),
     path('users/', include("usersapp.urls")),
@@ -44,5 +45,8 @@ urlpatterns = [
     path('genre/', include(router_genre.urls)),
     path('studio/', include(router_studio.urls)),
     path('game/', include(router_game.urls)),
+
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
 ]
 urlpatterns += doc_urls

@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from .models import Game
+from .models import Game, Studio
 
 
 class GameFilter(filters.FilterSet):
